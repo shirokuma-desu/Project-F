@@ -1,3 +1,4 @@
+using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,6 +6,10 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] private float AniBlendSpeed = 8.9f;
+
+    [SerializeField] private Transform cameraTransform;
+
+    private float _xRotation;
 
     private Rigidbody _playerRb;
 
@@ -28,7 +33,7 @@ public class PlayerController : MonoBehaviour
     {
         _hasAnimator = TryGetComponent<Animator>(out _animator);
         _playerRb = GetComponent<Rigidbody>();
-        _inputManager = GetComponent<InputManager>();
+        _inputManager = InputManager.Instance;
 
         _xVelHash = Animator.StringToHash("X_Velocity");
         _yVelHash = Animator.StringToHash("Y_Velocity");
@@ -37,6 +42,7 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         Move();
+        /*RotatePlayer();*/
     }
 
     private void Move()
@@ -45,10 +51,10 @@ public class PlayerController : MonoBehaviour
 
         float targetSpeed = _inputManager.Run ? _runSpeed : _walkSpeed;
 
-        if (_inputManager.Move == Vector2.zero) targetSpeed = 0;
+        if (_inputManager.MoveInput == Vector2.zero) targetSpeed = 0;
 
-        _currentVel.x = Mathf.Lerp(_currentVel.x,targetSpeed * _inputManager.Move.x, AniBlendSpeed * Time.fixedDeltaTime);
-        _currentVel.y = Mathf.Lerp(_currentVel.y, targetSpeed * _inputManager.Move.y, AniBlendSpeed * Time.fixedDeltaTime);
+        _currentVel.x = Mathf.Lerp(_currentVel.x,targetSpeed * _inputManager.MoveInput.x, AniBlendSpeed * Time.fixedDeltaTime);
+        _currentVel.y = Mathf.Lerp(_currentVel.y, targetSpeed * _inputManager.MoveInput.y, AniBlendSpeed * Time.fixedDeltaTime);
 
         var xVelDiff = _currentVel.x - _playerRb.velocity.x;
         var zVelDiff = _currentVel.y - _playerRb.velocity.z;
@@ -57,4 +63,28 @@ public class PlayerController : MonoBehaviour
         _animator.SetFloat(_xVelHash, _currentVel.x);
         _animator.SetFloat(_yVelHash, _currentVel.y);
     }
+    
+
+    //TO DO: Fix currently bug
+    private void RotatePlayer()
+    {
+        Vector2 lookInput = _inputManager.LookInput;
+
+        // Adjust rotation speed with mouse sensitivity
+        float mouseX = lookInput.x * 10f * Time.deltaTime;
+
+        // Rotate the player body only along the Y-axis (horizontal rotation)
+        transform.Rotate(Vector3.up * mouseX);
+
+        // Ensure camera is synchronized for the correct horizontal forward direction
+        Vector3 cameraForward = cameraTransform.forward;
+        cameraForward.y = 0; // Ignore vertical rotation for player body rotation
+        if (cameraForward.magnitude > 0.1f)
+        {
+            // Smoothly rotate the player to face the same direction as the camera
+            Quaternion targetRotation = Quaternion.LookRotation(cameraForward);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 10f);
+        }
+    }
+   
 }

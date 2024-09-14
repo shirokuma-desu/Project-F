@@ -8,10 +8,12 @@ using UnityEngine.InputSystem.Interactions;
 public class InputManager : MonoBehaviour
 {
     [SerializeField] private PlayerInput PlayerInput;
-
-    public Vector2 Move { get; private set; }
-    public Vector2 Look { get; private set; }
+    private static InputManager instance;
+    public Vector2 MoveInput { get; private set; }
+    public Vector2 LookInput { get; private set; }
     public bool Run { get; private set; }
+    public static InputManager Instance
+    { get { return instance; } }
 
     private InputActionMap _currentMap;
     private InputAction _moveAction;
@@ -20,6 +22,15 @@ public class InputManager : MonoBehaviour
 
     private void Awake()
     {
+        if (instance != null && instance != this)
+        {
+            Destroy(this.gameObject);
+        }
+        else
+        {
+            instance = this;
+        }
+
         _currentMap = PlayerInput.currentActionMap;
         _moveAction = _currentMap.FindAction("Move");
         _lookAction = _currentMap.FindAction("Look");
@@ -57,7 +68,7 @@ public class InputManager : MonoBehaviour
     {
         if (_currentMap is not null)
         {
-            Look = context.ReadValue<Vector2>();
+            LookInput = context.ReadValue<Vector2>();
         }
     }
 
@@ -65,7 +76,7 @@ public class InputManager : MonoBehaviour
     {
         if (_currentMap is not null)
         {
-            Move = context.ReadValue<Vector2>();
+            MoveInput = context.ReadValue<Vector2>();
         }
     }
 }
