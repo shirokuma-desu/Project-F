@@ -7,7 +7,12 @@ public class PlayerController : MonoBehaviour
 {
     [SerializeField] private float AniBlendSpeed = 8.9f;
 
-    [SerializeField] private Transform cameraTransform;
+    [SerializeField] private Transform CameraRoot;
+    [SerializeField] private Transform Camera;
+
+    [SerializeField] private float UpperLimit = -40f;
+    [SerializeField] private float BottomLimit = 70f;
+    [SerializeField] private float MouseSensitivity = 21.9f;
 
     private float _xRotation;
 
@@ -28,12 +33,12 @@ public class PlayerController : MonoBehaviour
 
     private Vector2 _currentVel;
 
-    // Start is called before the first frame update
     private void Start()
     {
         _hasAnimator = TryGetComponent<Animator>(out _animator);
         _playerRb = GetComponent<Rigidbody>();
         _inputManager = InputManager.Instance;
+
 
         _xVelHash = Animator.StringToHash("X_Velocity");
         _yVelHash = Animator.StringToHash("Y_Velocity");
@@ -42,7 +47,11 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         Move();
-        /*RotatePlayer();*/
+    }
+
+    private void LateUpdate()
+    {
+        CamMovements();
     }
 
     private void Move()
@@ -63,28 +72,21 @@ public class PlayerController : MonoBehaviour
         _animator.SetFloat(_xVelHash, _currentVel.x);
         _animator.SetFloat(_yVelHash, _currentVel.y);
     }
-    
 
-    //TO DO: Fix currently bug
-    private void RotatePlayer()
+    private void CamMovements()
     {
-        Vector2 lookInput = _inputManager.LookInput;
+        if (!_hasAnimator) return;
 
-        // Adjust rotation speed with mouse sensitivity
-        float mouseX = lookInput.x * 10f * Time.deltaTime;
+        var Mouse_X = _inputManager.LookInput.x;
+        var Mouse_Y = _inputManager.LookInput.y;
+        Camera.transform.position = CameraRoot.position;
 
-        // Rotate the player body only along the Y-axis (horizontal rotation)
-        transform.Rotate(Vector3.up * mouseX);
 
-        // Ensure camera is synchronized for the correct horizontal forward direction
-        Vector3 cameraForward = cameraTransform.forward;
-        cameraForward.y = 0; // Ignore vertical rotation for player body rotation
-        if (cameraForward.magnitude > 0.1f)
-        {
-            // Smoothly rotate the player to face the same direction as the camera
-            Quaternion targetRotation = Quaternion.LookRotation(cameraForward);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 10f);
-        }
+        _xRotation -= Mouse_Y * MouseSensitivity * Time.smoothDeltaTime;
+        _xRotation = Mathf.Clamp(_xRotation, UpperLimit, BottomLimit);
+
+        Camera.transform.localRotation = Quaternion.Euler(_xRotation, 0, 0);
+        _playerRb.MoveRotation(_playerRb.rotation * Quaternion.Euler(0, Mouse_X * MouseSensitivity * Time.smoothDeltaTime, 0));
     }
-   
+
 }

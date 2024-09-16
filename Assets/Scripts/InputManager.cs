@@ -44,6 +44,8 @@ public class InputManager : MonoBehaviour
 
         _runAction.performed += OnRun;
         _runAction.canceled += OnRun;
+
+        Cursor.visible = false;
     }
 
     private void OnEnable()
