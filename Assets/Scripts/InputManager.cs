@@ -8,7 +8,6 @@ using UnityEngine.InputSystem.Interactions;
 public class InputManager : MonoBehaviour
 {
     [SerializeField] private PlayerInput PlayerInput;
-    private static InputManager instance;
     public Vector2 MoveInput { get; private set; }
     public Vector2 LookInput { get; private set; }
     public bool getRunInput { get; private set; }
@@ -16,9 +15,6 @@ public class InputManager : MonoBehaviour
     public bool getJumpInput { get; private set; }
 
     public bool getCrouchInput { get; private set; }
-
-    public static InputManager Instance
-    { get { return instance; } }
 
     private InputActionMap _currentMap;
     private InputAction _moveAction;
@@ -29,15 +25,7 @@ public class InputManager : MonoBehaviour
 
     private void Awake()
     {
-        if (instance != null && instance != this)
-        {
-            Destroy(this.gameObject);
-        }
-        else
-        {
-            instance = this;
-        }
-
+       
         _currentMap = PlayerInput.currentActionMap;
         _moveAction = _currentMap.FindAction("Move");
         _lookAction = _currentMap.FindAction("Look");
@@ -59,9 +47,6 @@ public class InputManager : MonoBehaviour
 
         _crouchAction.performed += OnCrouch;
         _crouchAction.canceled += OnCrouch;
-
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
     }
 
     private void OnEnable()
