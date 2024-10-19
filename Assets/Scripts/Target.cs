@@ -21,7 +21,6 @@ public class Target : MonoBehaviour, IDamageable
     public void TakeDamage(float damage)
     {
         health -= damage;
-        Debug.Log(health);
         if(health <= 0f)
         {
             Destroy(gameObject);

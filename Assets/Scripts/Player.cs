@@ -6,7 +6,7 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     public static event Action ShootInput;
-    public static event Action reloadInput;
+    public static event Action ReloadInput;
 
     // Start is called before the first frame update
     void Start()
@@ -18,11 +18,11 @@ public class Player : MonoBehaviour
     {
         if (Input.GetMouseButton(0))
         {
-                ShootInput?.Invoke();
+            ShootInput?.Invoke();
         }
         if (Input.GetKeyDown(KeyCode.R))
         {
-            reloadInput?.Invoke();
+            ReloadInput?.Invoke();
         }
     }
 }

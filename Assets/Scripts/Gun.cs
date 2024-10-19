@@ -17,7 +17,7 @@ public class Gun : MonoBehaviour
     void Start()
     {
         Player.ShootInput += Shoot;
-        Player.reloadInput += StartReload;
+        Player.ReloadInput += StartReload;
     }
 
     // Update is called once per frame
@@ -37,8 +37,9 @@ public class Gun : MonoBehaviour
                 if(Physics.Raycast(muzzlePos.position, muzzlePos.forward, out RaycastHit hitInfo, gunData.maxDistance))
                 {
                     Debug.Log(hitInfo.transform.name);
+                    Debug.Log(hitInfo.transform.position);
 
-                    Vector3 bulletDir = (hitInfo.transform.position - muzzlePos.position).normalized;
+                    Vector3 bulletDir = (hitInfo.point - muzzlePos.position).normalized;
 
                     Transform bulletTransform = Instantiate(bulletPrefab, muzzlePos.position,Quaternion.identity);
 
@@ -83,6 +84,6 @@ public class Gun : MonoBehaviour
     private void OnDisable()
     {
         Player.ShootInput -= Shoot;
-        Player.reloadInput -= StartReload;
+        Player.ReloadInput -= StartReload;
     }
 }
