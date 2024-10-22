@@ -8,6 +8,7 @@ public class Gun : MonoBehaviour
     [Header("References")]
     [SerializeField] private GunData gunData;
     [SerializeField] private Transform muzzlePos;
+    [SerializeField] private Transform cameraPos;
     [SerializeField] private Transform bulletPrefab;
     
 
@@ -18,6 +19,7 @@ public class Gun : MonoBehaviour
     {
         Player.ShootInput += Shoot;
         Player.ReloadInput += StartReload;
+        gunData.isReloading = false;
     }
 
     // Update is called once per frame
@@ -34,14 +36,15 @@ public class Gun : MonoBehaviour
         {
             if (CanShoot())
             {
-                if(Physics.Raycast(muzzlePos.position, muzzlePos.forward, out RaycastHit hitInfo, gunData.maxDistance))
+                if (Physics.Raycast(cameraPos.position, cameraPos.forward, out RaycastHit hitInfo, gunData.maxDistance))
                 {
                     Debug.Log(hitInfo.transform.name);
                     Debug.Log(hitInfo.transform.position);
+                    Debug.DrawLine(cameraPos.position, hitInfo.point, Color.red, 5f);
 
                     Vector3 bulletDir = (hitInfo.point - muzzlePos.position).normalized;
 
-                    Transform bulletTransform = Instantiate(bulletPrefab, muzzlePos.position,Quaternion.identity);
+                    Transform bulletTransform = Instantiate(bulletPrefab, muzzlePos.position, Quaternion.identity);
 
                     bulletTransform.GetComponent<Bullet>().Setup(bulletDir);
 
@@ -81,9 +84,5 @@ public class Gun : MonoBehaviour
 
     private bool CanShoot() => !gunData.isReloading && timeSinceLastShot > 1f / (gunData.fireRate / 60f);
 
-    private void OnDisable()
-    {
-        Player.ShootInput -= Shoot;
-        Player.ReloadInput -= StartReload;
-    }
+   
 }

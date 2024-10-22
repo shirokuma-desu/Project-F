@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2339561cd5b453f4a83885f7396e5ca3, type: 3}
-  m_Name: GunDataSO
+  m_Name: AR_GunDataSO
   m_EditorClassIdentifier: 
   gunName: AK47
   damage: 20
   maxDistance: 200
   fireRate: 600
-  currentAmmo: 0
+  currentAmmo: 31
   magSize: 31
   reloadTime: 1.5
   isReloading: 0

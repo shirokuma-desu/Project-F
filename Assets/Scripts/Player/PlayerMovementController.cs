@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+public class PlayerMovementController : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private InputManager inputManager;
