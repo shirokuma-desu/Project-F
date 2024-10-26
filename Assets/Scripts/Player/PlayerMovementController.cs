@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class PlayerMovementController : MonoBehaviour
 {
-    [Header("References")]
-    [SerializeField] private InputManager inputManager;
 
     [Header("Movement Settings")]
     [SerializeField] private float walkSpeed;
@@ -26,7 +24,6 @@ public class PlayerMovementController : MonoBehaviour
 
     private void Awake()
     {
-        inputManager = GetComponent<InputManager>();
         characterController = GetComponent<CharacterController>();
 
         Cursor.lockState = CursorLockMode.Locked;
@@ -45,8 +42,8 @@ public class PlayerMovementController : MonoBehaviour
 
     private void HandleMovementInput()
     {
-        float verticalVel = inputManager.MoveInput.y;
-        float horizontalVel = inputManager.MoveInput.x;
+        float verticalVel = InputManager.Instance.MoveInput.y;
+        float horizontalVel = InputManager.Instance.MoveInput.x;
 
         currentVelocity.x = horizontalVel * walkSpeed; 
         currentVelocity.z = verticalVel * walkSpeed;
@@ -56,10 +53,10 @@ public class PlayerMovementController : MonoBehaviour
 
     private void HandleRun()
     {
-        if( inputManager.getRunInput)
+        if( InputManager.Instance.getRunInput)
         {
-            float verticalVel = inputManager.MoveInput.y;
-            float horizontalVel = inputManager.MoveInput.x;
+            float verticalVel = InputManager.Instance.MoveInput.y;
+            float horizontalVel = InputManager.Instance.MoveInput.x;
             currentVelocity.x = horizontalVel * runSpeed;
             currentVelocity.z = verticalVel * runSpeed;
             currentVelocity = (transform.TransformDirection(currentVelocity));
@@ -80,13 +77,13 @@ public class PlayerMovementController : MonoBehaviour
 
     private void HandleJump()
     {
-        if (!isJumping && characterController.isGrounded && inputManager.getJumpInput)
+        if (!isJumping && characterController.isGrounded && InputManager.Instance.getJumpInput)
         {
             Debug.Log("trigger");
             isJumping = true;
             currentVelocity.y += Mathf.Sqrt(initialJumpVel * -3.0f * gravity);
         }
-        else if (!inputManager.getJumpInput && characterController.isGrounded)
+        else if (!InputManager.Instance.getJumpInput && characterController.isGrounded)
         {
             isJumping = false;
         }

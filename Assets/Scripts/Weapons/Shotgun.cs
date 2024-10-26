@@ -2,45 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Shotgun : MonoBehaviour
+public class Shotgun : Weapon
 {
-    [Header("References")]
-    [SerializeField] private GunData gunData;
-
-    [SerializeField] private Transform muzzlePos;
-    [SerializeField] private Transform cameraPos;
-    [SerializeField] private Transform bulletPrefab;
-
     [SerializeField] private float bulletPerShot;
     [SerializeField] private float inaccuracyDistance = 5f;
 
-    private float timeSinceLastShot;
-
     // Start is called before the first frame update
-    private void Start()
-    {
-        Player.ShootInput += Shoot;
-        Player.ReloadInput += StartReload;
-        gunData.isReloading = false;
-    }
 
-    // Update is called once per frame
-    private void Update()
-    {
-        timeSinceLastShot += Time.deltaTime;
 
-        Debug.DrawRay(muzzlePos.position, muzzlePos.forward);
-    }
-
-    private void Shoot()
+    protected override void Shoot()
     {
+        Debug.Log("shotgun called");
         if (gunData.currentAmmo > 0)
         {
             if (CanShoot())
             {
                 for (int i = 0; i < bulletPerShot; i++)
                 {
-                    if (Physics.Raycast(cameraPos.position, GetShotingDirection(), out RaycastHit hitInfo, gunData.maxDistance))
+                    if (Physics.Raycast(cameraPos.position, GetShootingDirection(), out RaycastHit hitInfo, gunData.maxDistance))
                     {
                         //debug
                         Debug.Log(hitInfo.transform.name);
@@ -64,36 +43,16 @@ public class Shotgun : MonoBehaviour
 
                 gunData.currentAmmo--;
                 timeSinceLastShot = 0;
-                OnGunShot();
             }
         }
     }
 
-    private void OnGunShot()
+    protected override void SpecialShoot()
     {
+        throw new System.NotImplementedException();
     }
 
-    private void StartReload()
-    {
-        if (!gunData.isReloading)
-        {
-            StartCoroutine(Reload());
-        }
-    }
-
-    private IEnumerator Reload()
-    {
-        gunData.isReloading = true;
-
-        yield return new WaitForSeconds(gunData.reloadTime);
-
-        gunData.currentAmmo = gunData.magSize;
-        gunData.isReloading = false;
-    }
-
-    private bool CanShoot() => !gunData.isReloading && timeSinceLastShot > 1f / (gunData.fireRate / 60f);
-
-    private Vector3 GetShotingDirection()
+    private Vector3 GetShootingDirection()
     {
         Vector3 targetPos = cameraPos.position + cameraPos.forward * gunData.maxDistance;
         targetPos = new Vector3(
@@ -103,5 +62,19 @@ public class Shotgun : MonoBehaviour
 
         Vector3 direction = targetPos - cameraPos.position;
         return direction.normalized;
+    }
+
+    private void OnDisable()
+    {
+        Player.ShootInput -= this.Shoot;
+        Player.ReloadInput -= base.StartReload;
+        gunData.isReloading = false;
+    }
+
+    private void OnEnable()
+    {
+        Player.ShootInput += this.Shoot;
+        Player.ReloadInput += base.StartReload;
+        gunData.isReloading = false;
     }
 }

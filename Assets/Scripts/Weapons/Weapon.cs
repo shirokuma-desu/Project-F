@@ -1,27 +1,20 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Gun : MonoBehaviour
+public abstract class Weapon : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] private GunData gunData;
-    [SerializeField] private Transform muzzlePos;
-    [SerializeField] private Transform cameraPos;
-    [SerializeField] private Transform bulletPrefab;
-    
+    [SerializeField] protected GunData gunData;
+    [SerializeField] protected Transform muzzlePos;
+    [SerializeField] protected Transform cameraPos;
+    [SerializeField] protected Transform bulletPrefab;
 
-    private float timeSinceLastShot;
+
+    protected float timeSinceLastShot;
 
     // Start is called before the first frame update
-    void Start()
-    {
-        Player.ShootInput += Shoot;
-        Player.ReloadInput += StartReload;
-        gunData.isReloading = false;
-    }
-
+  
     // Update is called once per frame
     void Update()
     {
@@ -30,9 +23,9 @@ public class Gun : MonoBehaviour
         Debug.DrawRay(muzzlePos.position, muzzlePos.forward);
     }
 
-    private void Shoot()
+    protected void CoreShoot()
     {
-        if(gunData.currentAmmo > 0)
+        if (gunData.currentAmmo > 0)
         {
             if (CanShoot())
             {
@@ -54,25 +47,22 @@ public class Gun : MonoBehaviour
 
                 gunData.currentAmmo--;
                 timeSinceLastShot = 0;
-                OnGunShot();
             }
         }
     }
 
-    private void OnGunShot()
-    {
-       
-    }
+    protected abstract void Shoot();
+    protected abstract void SpecialShoot();
 
-    private void StartReload()
+    protected void StartReload()
     {
-        if (!gunData.isReloading)
+        if (!gunData.isReloading && this.gameObject.activeSelf)
         {
             StartCoroutine(Reload());
         }
     }
 
-    private IEnumerator Reload()
+    protected IEnumerator Reload()
     {
         gunData.isReloading = true;
 
@@ -82,7 +72,7 @@ public class Gun : MonoBehaviour
         gunData.isReloading = false;
     }
 
-    private bool CanShoot() => !gunData.isReloading && timeSinceLastShot > 1f / (gunData.fireRate / 60f);
+    protected bool CanShoot() => !gunData.isReloading && timeSinceLastShot > 1f / (gunData.fireRate / 60f);
 
-   
+    
 }

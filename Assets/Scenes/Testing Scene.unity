@@ -431,8 +431,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 116825338}
+  - component: {fileID: 116825339}
   m_Layer: 0
-  m_Name: WeaponeHolder
+  m_Name: WeaponHolder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -455,6 +456,23 @@ Transform:
   - {fileID: 4758482}
   m_Father: {fileID: 1901207811}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &116825339
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 116825337}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5bbfa54a697ab7144a50921954645ada, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weapons:
+  - {fileID: 0}
+  - {fileID: 0}
+  keys: 3100000032000000
+  switchTime: 1
 --- !u!1 &128698713
 GameObject:
   m_ObjectHideFlags: 0
@@ -1791,6 +1809,7 @@ MonoBehaviour:
   bulletPrefab: {fileID: 7319777740826409774, guid: b4dad976411ae5443860cd50b348f2c7,
     type: 3}
   bulletPerShot: 6
+  inaccuracyDistance: 5
 --- !u!1 &528009193
 GameObject:
   m_ObjectHideFlags: 0

@@ -7,6 +7,9 @@ using UnityEngine.InputSystem.Interactions;
 
 public class InputManager : MonoBehaviour
 {
+    public static InputManager Instance { get; private set; }
+
+
     [SerializeField] private PlayerInput PlayerInput;
     public Vector2 MoveInput { get; private set; }
     public Vector2 LookInput { get; private set; }
@@ -25,28 +28,39 @@ public class InputManager : MonoBehaviour
 
     private void Awake()
     {
-       
-        _currentMap = PlayerInput.currentActionMap;
-        _moveAction = _currentMap.FindAction("Move");
-        _lookAction = _currentMap.FindAction("Look");
-        _runAction = _currentMap.FindAction("Run");
-        _jumpAction = _currentMap.FindAction("Jump");
-        _crouchAction = _currentMap.FindAction("Crouch");
+        if(Instance != null && Instance != this)
+        {
+            Destroy(Instance);
+            return;
+        }
+        else
+        {
+            Instance = this;
+            DontDestroyOnLoad(Instance);
+            PlayerInput = GetComponent<PlayerInput>();
+            _currentMap = PlayerInput.currentActionMap;
+            _moveAction = _currentMap.FindAction("Move");
+            _lookAction = _currentMap.FindAction("Look");
+            _runAction = _currentMap.FindAction("Run");
+            _jumpAction = _currentMap.FindAction("Jump");
+            _crouchAction = _currentMap.FindAction("Crouch");
 
-        _moveAction.performed += OnMove;
-        _moveAction.canceled += OnMove;
+            _moveAction.performed += OnMove;
+            _moveAction.canceled += OnMove;
 
-        _lookAction.performed += OnLook;
-        _lookAction.canceled += OnLook;
+            _lookAction.performed += OnLook;
+            _lookAction.canceled += OnLook;
 
-        _runAction.performed += OnRun;
-        _runAction.canceled += OnRun;
+            _runAction.performed += OnRun;
+            _runAction.canceled += OnRun;
 
-        _jumpAction.performed += OnJump;
-        _jumpAction.canceled += OnJump;
+            _jumpAction.performed += OnJump;
+            _jumpAction.canceled += OnJump;
 
-        _crouchAction.performed += OnCrouch;
-        _crouchAction.canceled += OnCrouch;
+            _crouchAction.performed += OnCrouch;
+            _crouchAction.canceled += OnCrouch;
+        }
+        
     }
 
     private void OnEnable()

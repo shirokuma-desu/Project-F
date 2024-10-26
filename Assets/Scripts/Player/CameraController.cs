@@ -16,12 +16,10 @@ public class CameraController : MonoBehaviour
 
     [Header("References")]
     public Transform cameraHolderRef;
-    [SerializeField] private InputManager inputManager;
 
 
     private void Awake()
     {
-        inputManager = GetComponent<InputManager>();
         newCameraRotation = cameraHolderRef.localRotation.eulerAngles;
         newCharacterRotation = transform.localRotation.eulerAngles;
     }
@@ -40,11 +38,11 @@ public class CameraController : MonoBehaviour
     private void HandleMouseInput()
     {
         //handle horizontal rotation
-        newCharacterRotation.y += inputManager.LookInput.x * sensX * Time.deltaTime;
+        newCharacterRotation.y += InputManager.Instance.LookInput.x * sensX * Time.deltaTime;
         transform.localRotation = Quaternion.Euler(newCharacterRotation);
 
         //handle vertical rotation
-        newCameraRotation.x += sensX * Time.deltaTime * -inputManager.LookInput.y;
+        newCameraRotation.x += sensX * Time.deltaTime * -InputManager.Instance.LookInput.y;
         newCameraRotation.x = Mathf.Clamp(newCameraRotation.x, minYRotation, maxYRotation);
         cameraHolderRef.localRotation = Quaternion.Euler(newCameraRotation);
     }
