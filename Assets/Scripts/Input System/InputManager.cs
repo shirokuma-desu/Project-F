@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Interactions;
@@ -13,18 +14,29 @@ public class InputManager : MonoBehaviour
     [SerializeField] private PlayerInput PlayerInput;
     public Vector2 MoveInput { get; private set; }
     public Vector2 LookInput { get; private set; }
-    public bool getRunInput { get; private set; }
+    public bool getDashInput { get; private set; }
 
     public bool getJumpInput { get; private set; }
 
     public bool getCrouchInput { get; private set; }
 
+    public bool getReloadInput { get; private set; }
+
+    public bool getFireInput { get; private set; }
+
+    public bool getSpecialInput { get; private set; }
+
+
+
     private InputActionMap _currentMap;
     private InputAction _moveAction;
     private InputAction _lookAction;
-    private InputAction _runAction;
+    private InputAction _dashAction;
     private InputAction _jumpAction;
     private InputAction _crouchAction;
+    private InputAction _fireAction;
+    private InputAction _reloadAction;
+    private InputAction _specialFireAction;
 
     private void Awake()
     {
@@ -41,9 +53,13 @@ public class InputManager : MonoBehaviour
             _currentMap = PlayerInput.currentActionMap;
             _moveAction = _currentMap.FindAction("Move");
             _lookAction = _currentMap.FindAction("Look");
-            _runAction = _currentMap.FindAction("Run");
+            _dashAction = _currentMap.FindAction("Dash");
             _jumpAction = _currentMap.FindAction("Jump");
             _crouchAction = _currentMap.FindAction("Crouch");
+            _fireAction = _currentMap.FindAction("Fire");
+            _reloadAction = _currentMap.FindAction("Reload");
+            _specialFireAction = _currentMap.FindAction("SecondFire");
+
 
             _moveAction.performed += OnMove;
             _moveAction.canceled += OnMove;
@@ -51,17 +67,29 @@ public class InputManager : MonoBehaviour
             _lookAction.performed += OnLook;
             _lookAction.canceled += OnLook;
 
-            _runAction.performed += OnRun;
-            _runAction.canceled += OnRun;
+            _dashAction.performed += OnDash;
+            _dashAction.canceled += OnDash;
+
 
             _jumpAction.performed += OnJump;
             _jumpAction.canceled += OnJump;
 
             _crouchAction.performed += OnCrouch;
             _crouchAction.canceled += OnCrouch;
+
+            _fireAction.performed += OnFire;
+            _fireAction.canceled += OnFire;
+
+            _reloadAction.performed += OnReload;
+            _reloadAction.canceled += OnReload;
+
+            _specialFireAction.performed += OnSpecialFire;
+            _specialFireAction.canceled += OnSpecialFire;
         }
         
     }
+
+
 
     private void OnEnable()
     {
@@ -73,11 +101,11 @@ public class InputManager : MonoBehaviour
         _currentMap.Disable();
     }
 
-    private void OnRun(InputAction.CallbackContext context)
+    private void OnDash(InputAction.CallbackContext context)
     {
         if (_currentMap is not null)
         {
-            getRunInput = context.ReadValueAsButton();
+            getDashInput = context.ReadValueAsButton();
         }
     }
 
@@ -110,6 +138,30 @@ public class InputManager : MonoBehaviour
         if( _currentMap is not null)
         {
             getCrouchInput = context.ReadValueAsButton();
+        }
+    }
+
+    private void OnReload(InputAction.CallbackContext context)
+    {
+        if (_currentMap is not null)
+        {
+            getReloadInput = context.ReadValueAsButton();
+        }
+    }
+
+    private void OnFire(InputAction.CallbackContext context)
+    {
+        if (_currentMap is not null)
+        {
+            getFireInput = context.ReadValueAsButton();
+        }
+    }
+
+    private void OnSpecialFire(InputAction.CallbackContext context)
+    {
+        if (_currentMap is not null)
+        {
+            getSpecialInput = context.ReadValueAsButton();
         }
     }
 }

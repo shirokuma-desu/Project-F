@@ -5,8 +5,10 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public static event Action ShootInput;
-    public static event Action ReloadInput;
+    public static event Action ShootEvent;
+    public static event Action ReloadEvent;
+    public static event Action SpecialShootEvent;
+    
 
     // Start is called before the first frame update
     void Start()
@@ -16,13 +18,17 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButton(0))
+        if (InputManager.Instance.getFireInput)
         {
-            ShootInput?.Invoke();
+            ShootEvent?.Invoke();
         }
-        if (Input.GetKeyDown(KeyCode.R))
+        else if (InputManager.Instance.getReloadInput)
         {
-            ReloadInput?.Invoke();
+            ReloadEvent?.Invoke();
+        }
+        else if (InputManager.Instance.getSpecialInput)
+        {
+            SpecialShootEvent?.Invoke();
         }
     }
 }

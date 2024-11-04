@@ -24,7 +24,7 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Run",
+                    "name": "Dash",
                     "type": "Button",
                     "id": "698b8fb9-50e5-448e-a761-fc37aa6a4e04",
                     "expectedControlType": "Button",
@@ -45,6 +45,33 @@
                     "name": "Crouch",
                     "type": "Button",
                     "id": "dc5fa144-1b2b-4e52-884c-62753da8e969",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Fire",
+                    "type": "Button",
+                    "id": "f4ef7dc3-7472-4f46-9b56-7ffd1d63d387",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "SecondFire",
+                    "type": "Button",
+                    "id": "c437dd11-b761-4d60-9bef-da7ca1b13fdc",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Reload",
+                    "type": "Button",
+                    "id": "d69b1d31-656e-4fd8-a2fd-abf1e6a6c476",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -191,7 +218,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Run",
+                    "action": "Dash",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -202,7 +229,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Run",
+                    "action": "Dash",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -225,6 +252,39 @@
                     "processors": "",
                     "groups": "",
                     "action": "Crouch",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a845a9cf-942e-43c5-894d-d354d1dbb95f",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Fire",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "1fec4ab6-17af-4d2b-8049-09dc6779e267",
+                    "path": "<Keyboard>/r",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Reload",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "72641707-0ca6-4cf7-a9f5-d34fc93e8322",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SecondFire",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

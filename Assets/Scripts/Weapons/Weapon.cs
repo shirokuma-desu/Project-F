@@ -23,12 +23,11 @@ public abstract class Weapon : MonoBehaviour
         Debug.DrawRay(muzzlePos.position, muzzlePos.forward);
     }
 
-    protected void CoreShoot()
+
+    protected virtual void Shoot()
     {
-        if (gunData.currentAmmo > 0)
+        if (gunData.currentAmmo > 0 && CanShoot(gunData.fireRate))
         {
-            if (CanShoot())
-            {
                 if (Physics.Raycast(cameraPos.position, cameraPos.forward, out RaycastHit hitInfo, gunData.maxDistance))
                 {
                     Debug.Log(hitInfo.transform.name);
@@ -47,11 +46,8 @@ public abstract class Weapon : MonoBehaviour
 
                 gunData.currentAmmo--;
                 timeSinceLastShot = 0;
-            }
         }
     }
-
-    protected abstract void Shoot();
     protected abstract void SpecialShoot();
 
     protected void StartReload()
@@ -72,7 +68,21 @@ public abstract class Weapon : MonoBehaviour
         gunData.isReloading = false;
     }
 
-    protected bool CanShoot() => !gunData.isReloading && timeSinceLastShot > 1f / (gunData.fireRate / 60f);
+    protected virtual bool CanShoot(float fireRate) => !gunData.isReloading && timeSinceLastShot > 1f / (fireRate / 60f);
 
-    
+    protected virtual void OnEnable()
+    {
+        Player.ShootEvent += Shoot;
+        Player.ReloadEvent += StartReload;
+        Player.SpecialShootEvent += SpecialShoot;
+        gunData.isReloading = false;
+    }
+
+    protected virtual void OnDisable()
+    {
+        Player.ShootEvent -= Shoot;
+        Player.ReloadEvent -= StartReload;
+        Player.SpecialShootEvent -= SpecialShoot;
+        gunData.isReloading = false;
+    }
 }
